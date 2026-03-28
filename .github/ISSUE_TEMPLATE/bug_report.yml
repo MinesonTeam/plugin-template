@@ -1,0 +1,61 @@
+name: 🐛 Bug Report
+description: Report a bug, error, or crash to help us improve the plugin
+labels: ['type: bug', 'status: needs info']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for reporting!** Please fill out this form completely. Do not report security vulnerabilities (dupes, exploits) here.
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🧩 Affected Component
+      description: Select the system where the bug occurs (This helps maintainers assign the correct 'comp:' label).
+      multiple: true
+      options:
+        - "comp: api (External hooks)"
+        - "comp: command (Commands/Permissions)"
+        - "comp: config (Settings parsing)"
+        - "comp: data (Database/Saving)"
+        - "comp: economy (Transactions)"
+        - "comp: gui (Menus/Inventories)"
+        - "comp: performance (Lag/TPS)"
+        - "comp: event (Core mechanics)"
+        - "Other / Unknown"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 🖥️ Server Software & Plugin Version
+      description: e.g., Paper 1.20.4, DynamicShop v1.0.2
+      placeholder: "Paper 1.20.4 | Plugin v1.0.2"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Bug Description
+      description: What happened? What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: How can we trigger this bug?
+      value: |
+        1. Start the server...
+        2. Execute command '/...'
+        3. Click on '...'
+        4. See error...
+    validations:
+      required: true
+  - type: input
+    id: logs
+    attributes:
+      label: 📋 Error Logs
+      description: Provide a link to the console error. ALWAYS use Pastebin or mclo.gs. Do not paste large logs directly here.
+    validations:
+      required: false
