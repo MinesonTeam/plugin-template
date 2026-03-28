@@ -1,0 +1,8 @@
+gradlew linguist-vendored
+gradlew.bat linguist-vendored
+gradle/wrapper/* linguist-vendored
+
+*.kts linguist-detectable=false
+
+.github/* linguist-vendored
+*.yml linguist-detectable=false
