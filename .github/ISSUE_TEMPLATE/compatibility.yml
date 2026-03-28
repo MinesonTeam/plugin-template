@@ -1,0 +1,26 @@
+name: 🤝 Compatibility Issue
+description: Report a conflict between this plugin and another one
+labels: ["type: bug", "comp: hook", "status: pending review"]
+body:
+  - type: input
+    id: conflicting_plugin
+    attributes:
+      label: 🧩 Conflicting Plugin
+      description: Name and version of the plugin causing the conflict.
+      placeholder: "WorldGuard v7.0.9"
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: ❓ What happens?
+      description: Describe how the plugins conflict with each other.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 🔄 Reproduction Steps
+      description: Does the bug happen if you remove the other plugin?
+    validations:
+      required: true
