@@ -1,0 +1,16 @@
+name: 🛡️ Security Vulnerability
+description: Report a dupe, exploit, or permission bypass (Private report)
+labels: ["type: security", "priority: critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ DO NOT POST SENSITIVE DETAILS HERE
+        To prevent exploits from spreading, please report security issues privately.
+        
+        **How to report:**
+        1. Join our Discord: https://discord.gg/f4qRDV93
+        2. Create a private ticket or DM an administrator.
+        3. Provide details about the exploit/dupe.
+        
+        If you still want to open a placeholder issue here, just describe the general area (e.g., "Economy dupe") without steps to reproduce.
