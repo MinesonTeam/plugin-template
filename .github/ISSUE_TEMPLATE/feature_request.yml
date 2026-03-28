@@ -1,0 +1,36 @@
+name: 💡 Feature / Enhancement
+description: Suggest a new mechanic, command, or improvement to existing code
+labels: ['status: pending review']
+assignees: []
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: 🎯 Request Type
+      description: Is this a completely new feature or an improvement to an existing one?
+      options:
+        - "New Feature (will get 'type: feature' label)"
+        - "Improvement (will get 'type: enhancement' label)"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🤔 Is your request related to a problem?
+      description: A clear and concise description of what the problem is. Ex. "I'm always frustrated when..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: ✨ Proposed Solution
+      description: Describe exactly how the new feature/command/mechanic should work.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: Any other ways you tried to solve this?
+    validations:
+      required: false
