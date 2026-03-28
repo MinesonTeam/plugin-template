@@ -1,0 +1,30 @@
+name: ⚡ Performance Issue
+description: Report lag, high CPU usage, or TPS drops caused by the plugin
+labels: ["type: perf", "comp: performance", "status: needs info"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Performance issues require technical data.** Reports without Spark or Timings links will be closed.
+  - type: input
+    id: timings
+    attributes:
+      label: 📊 Spark / Timings Link
+      description: Provide a link to your Spark profile or Timings v2 report.
+      placeholder: "https://spark.lucko.me/..."
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Description
+      description: When do the lags occur? (e.g., on player join, during shop refresh)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 🖥️ Server & Plugin Version
+      description: e.g., Purpur 1.20.4 | Plugin v1.0.2
+    validations:
+      required: true
