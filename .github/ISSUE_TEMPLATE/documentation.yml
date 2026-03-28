@@ -1,0 +1,18 @@
+name: 📖 Documentation Issue
+description: Report missing or incorrect information in README, Wiki, or JavaDocs
+labels: ["type: docs", "priority: low"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Where is the error? (e.g., README.md, Wiki page link, JavaDoc)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Description of the error
+      description: What is wrong and what should be there instead?
+    validations:
+      required: true
