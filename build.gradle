@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'io.github.goooler.shadow' version '8.1.8'
+}
+
+group = project.findProperty("pluginGroup") ?: "kz.hxncus.mc"
+version = project.findProperty("pluginVersion") ?: "1.0.0"
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' } // Paper API
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://storehouse.okaeri.eu/repository/maven-public/' }
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:${project.spigotVersion}-R0.1-SNAPSHOT"
+
+    compileOnly "org.projectlombok:lombok:${project.lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombokVersion}"
+
+    implementation "org.bstats:bstats-bukkit:${project.bstatsVersion}"
+
+    testImplementation "org.junit.jupiter:junit-jupiter:${project.junitVersion}"
+    testImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
+}
+
+java {
+    def javaVer = project.hasProperty("javaVersion") ? Integer.parseInt(project.property("javaVersion") as String) : 21
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVer)
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = project.findProperty("projectEncoding") ?: "UTF-8"
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    archiveFileName.set("${project.name}-${project.version}.jar")
+
+    relocate "org.bstats", "${project.group}.${project.name.toLowerCase()}.libs.bstats"
+}
+
+build.dependsOn shadowJar
+
+tasks.register('copyToDev', Copy) {
+    dependsOn shadowJar
+    group = "build"
+
+    def localProps = new Properties()
+    def localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        localProps.load(new FileInputStream(localPropsFile))
+    }
+
+    def targetDir = localProps.getProperty("testServerPath") ?: buildDir.path + "/libs"
+
+    from shadowJar.archiveFile
+    into file(targetDir)
+
+    doLast {
+        println "✅ Plugin copied to test server: ${targetDir}"
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+processResources {
+    def props = [
+            name       : project.findProperty("name") ?: project.name,
+            description: project.findProperty("description") ?: "A minecraft plugin.",
+            version    : version,
+            main       : "${project.group}.${project.name.toLowerCase()}.${project.name}",
+            apiVersion : project.findProperty("apiVersion") ?: "1.13",
+            authors    : project.findProperty("authors") ?: "Hxncus",
+            website    : project.findProperty("website") ?: "https://ko-fi.com/Hxncus"
+    ]
+
+    inputs.properties props
+    filteringCharset 'UTF-8'
+
+    filesMatching(['plugin.yml', 'paper-plugin.yml']) {
+        expand props
+    }
+}
