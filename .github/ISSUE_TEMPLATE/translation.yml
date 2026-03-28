@@ -1,0 +1,23 @@
+name: 🌐 Translation / Localization
+description: Report a typo or suggest a better translation for your language
+labels: ["type: translation", "comp: translation"]
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: 🌍 Language
+      options:
+        - English
+        - Russian
+        - Chinese
+        - Spanish
+        - Other (mention in description)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 📝 Translation Details
+      description: Current text vs. Suggested text.
+    validations:
+      required: true
