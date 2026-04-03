@@ -1,0 +1,90 @@
+name: 🚀 Production Release
+
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  MODRINTH_ID: 'YOUR_MODRINTH_ID'
+  CURSEFORGE_ID: 'YOUR_CURSEFORGE_ID'
+  MC_VERSIONS: '>=1.8 <=1.21.11'
+  LOADERS: 'bukkit, paper, purpur, spigot'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Node.js (For Semantic Release)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Force fetch tags
+        run: git fetch --tags --force
+        
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          npm install -g semantic-release @semantic-release/exec @semantic-release/git
+          semantic-release
+
+      - name: Set up JDK 21 (For Gradle 9)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Run Tests
+        run: chmod +x gradlew && ./gradlew test
+
+      - name: Build shadowJar
+        run: ./gradlew clean shadowJar
+
+      - name: Extract Project Name and Version
+        run: |
+          NAME=$(grep "rootProject.name" settings.gradle | cut -d'=' -f2 | tr -d " \r'\"")
+          VERSION=$(grep "projectVersion=" gradle.properties | cut -d'=' -f2 | tr -d '\r')
+          echo "PROJECT_NAME=$NAME" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Fetch Changelog from GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EOF=$(cat /proc/sys/kernel/random/uuid)
+          echo "CHANGELOG<<$EOF" >> $GITHUB_ENV
+          gh release view v${{ env.PROJECT_VERSION }} --json body -q .body >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
+      - name: Upload JAR to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload v${{ env.PROJECT_VERSION }} build/libs/*.jar --clobber
+        
+      - name: Publish to Modrinth & CurseForge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ env.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ env.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          name: "${{ env.PROJECT_NAME }} v${{ env.PROJECT_VERSION }}"
+          changelog: ${{ env.CHANGELOG }}
+          version: ${{ env.PROJECT_VERSION }}
+          version-type: release
+          
+          loaders: ${{ env.LOADERS }}
+          game-versions: ${{ env.MC_VERSIONS }}
+          files: build/libs/*.jar
