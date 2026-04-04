@@ -32,7 +32,7 @@ jobs:
           extra_args: --debug --only-verified
 
       - name: Set up JDK 21 (For Gradle 9)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
