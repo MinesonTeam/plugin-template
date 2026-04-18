@@ -85,7 +85,7 @@ jobs:
         run: gh release delete dev-latest --cleanup-tag -y || true
 
       - name: Create Rolling Dev Release in GitHub
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           token: ${{ github.token }}
           tag_name: dev-latest
